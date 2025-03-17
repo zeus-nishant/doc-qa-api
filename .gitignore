@@ -1,0 +1,13 @@
+# Ignore Go workspace files
+bin/
+pkg/
+
+# Ignore environment variables
+.env
+
+# Ignore IDE-specific files
+.vscode/
+.idea/
+
+# Ignore build artifacts
+api
