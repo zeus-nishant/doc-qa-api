@@ -39,7 +39,7 @@ func (c *Client) GenerateAnswer(document, question string) (string, error) {
 	log.Printf("Generated prompt: %s", prompt)
 
 	// Initialize the model
-	model := c.client.GenerativeModel("gemini") //gemini-1.5-flash
+	model := c.client.GenerativeModel("gemini-1.5-flash")
 
 	// Generate content
 	resp, err := model.GenerateContent(ctx, generativeai.Text(prompt))
