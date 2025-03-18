@@ -1,4 +1,3 @@
-version: "3"
 services:
   doc-qa-api:
     image: doc-qa-api:latest
