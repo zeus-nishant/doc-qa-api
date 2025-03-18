@@ -1,0 +1,55 @@
+name: Go Project Deployment 
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  Build:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        go-version: [1.23] 
+        
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
+
+    - name: Set up Go
+      uses: actions/setup-go@v3
+      with:
+        go-version: ${{ matrix.go-version }} 
+
+    - name: Cache Go modules
+      uses: actions/cache@v2
+      with:
+        path: ~/.cache/go-build
+        key: ${{ runner.os }}-go-${{ matrix.go-version }}-${{ hashFiles('**/go.mod') }}
+        restore-keys: |
+          ${{ runner.os }}-go-${{ matrix.go-version }}-
+
+    - name: Install Dependencies
+      run: go mod tidy
+
+  deploy:
+    needs: [Build]
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Login and deploy Go app
+      uses: appleboy/ssh-action@v0.1.10
+      with:
+        host: ${{ secrets.HOST }}
+        username: ${{ secrets.USERNAME }}
+        password: ${{ secrets.PASSWORD }}
+        port: ${{ secrets.PORT }}
+        script: |
+          cd /home/ubuntu/projects/doc-qa/doc-qa-api  
+          sudo git reset --hard
+          sudo git checkout main
+          sudo git pull https://github.com/zeus-nishant/doc-qa-api.git 
+          
+          # Copy .env file to the server
+          echo "${{ secrets.ENV }}" > /home/ubuntu/projects/doc-qa/doc-qa-api/.env
+          
+          docker stop doc-qa-api && docker system prune && docker compose up -d
