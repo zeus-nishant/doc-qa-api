@@ -1,0 +1,11 @@
+version: "3"
+services:
+  doc-qa-api:
+    image: doc-qa-api:latest
+    container_name: doc-qa-api_container
+    restart: unless-stopped
+    build : .
+    ports:
+      - 8080:8080
+    env_file:
+      - ./.env
