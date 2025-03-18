@@ -22,6 +22,11 @@ FROM alpine:latest
 # Set the working directory inside the container
 WORKDIR /app
 
+# Install Poppler (for pdftotext) and Tesseract OCR
+RUN apk add --no-cache \
+    poppler-utils \
+    tesseract-ocr
+
 # Copy the binary from the builder stage
 COPY --from=builder /api /api
 

@@ -29,18 +29,21 @@ func Start() {
 	if err != nil {
 		log.Fatalf("Failed to create Gemini client: %v", err)
 	}
+	
 
 	// Initialize services
 	geminiService := services.NewGeminiService(geminiClient)
+	pdfService := services.NewPDFService(geminiClient)
 
 	// Initialize controllers
 	questionController := controllers.NewQuestionController(geminiService)
+	uploadController := controllers.NewUploadController(pdfService)
 
 	// Create a new Gin router
 	Router = gin.Default()
 
 	// Set up routes
-	routes.SetupRoutes(Router, questionController)
+	routes.SetupRoutes(Router, questionController, uploadController)
 
 	// Start the server
 	log.Println("Server running on :8080")
