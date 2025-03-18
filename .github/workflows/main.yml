@@ -52,4 +52,4 @@ jobs:
           # Copy .env file to the server
           echo "${{ secrets.ENV }}" > /home/ubuntu/projects/doc-qa/doc-qa-api/.env
           
-          docker stop doc-qa-api && docker system prune && docker compose up -d
+          docker compose down && docker compose up -d
